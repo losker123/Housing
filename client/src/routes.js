@@ -3,9 +3,10 @@ import Auth from "./pages/Auth";
 import Main from "./pages/MainPage";
 import About from "./pages/About";
 import Create from "./pages/CreateHousing";
-import { ABOUT_ROUTE, ADMIN_ROUTE, CREATEHOUSING_ROUTE, HOUSING_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE, USERPROFILE_ROUTE } from "./utils/consts";
+import { ABOUT_ROUTE, ADMIN_ROUTE, CREATEHOUSING_ROUTE, HOUSING_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE, USERPROFILE_ROUTE, USER_HOUSING } from "./utils/consts";
 import HousingPage from "./pages/HousingPage";
 import UserProfile from "./pages/UserProfile";
+import UserHousing from "./pages/UserHousing";
 
 export const authRoutes = [
     {
@@ -19,6 +20,10 @@ export const authRoutes = [
     {
         path: USERPROFILE_ROUTE,
         Component: UserProfile
+    },
+    {
+        path: USER_HOUSING + '/:id',
+        Component: UserHousing 
     },
 ];
 

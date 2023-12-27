@@ -6,26 +6,31 @@ import { getAllRentls, getAllUserReviews, getUserHousing } from "../http/userApi
 import Rating from "react-rating";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ReviewModel from "../models/ReviewModel";
-import { canseleRent, deleteHousing } from "../http/housingApi";
+import { canseleRent } from "../http/housingApi";
 import { observer } from "mobx-react-lite";
 import UpdHousingModal from "../models/UpdHousingModal";
+import { USER_HOUSING } from "../utils/consts";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
     const [user, setUser] = useState();
     const [userRentel, setUserRentel] = useState();
     const [userReview, setUserReview] = useState();
     const [isLoading, setIsLoading] = useState(true);
-    const [userHousing, setUserHousing] = useState()
     const [updateHousingModel, setUpdateHousingModel] = useState()
-
-    const [updateModel, setUpdateModel] = useState(false);
     const [updId, setUpdId] = useState();
-
-    const [key, setKey] = useState(0);
+    const [updateModel, setUpdateModel] = useState(false);
+    const navigate = useNavigate()
 
     useEffect(() => {
         setUser(jwtDecode(localStorage.getItem('token')));
     }, []);
+
+
+    const setUpd = (id) => {
+        setUpdId(id);
+        setUpdateModel(true)
+    };
 
     useEffect(() => {
         if (user) {
@@ -34,8 +39,7 @@ const UserProfile = () => {
                     setUserRentel(data);
                     return getUserHousing(user.id);
                 })
-                .then((data) => {
-                    setUserHousing(data);
+                .then(() => {
                     return getAllUserReviews(user.id);
                 })
                 .then((data) => {
@@ -48,16 +52,6 @@ const UserProfile = () => {
         }
     }, [user]);
 
-
-    const setUpd = (id) => {
-        setUpdId(id);
-        setUpdateModel(true)
-    };
-
-    const updateHousing = (id) => {
-        setUpdId(id);
-        setUpdateHousingModel(true)
-    }
 
     return (
         <>
@@ -127,53 +121,10 @@ const UserProfile = () => {
                                 ))}
                             </Accordion.Body>
                         </Accordion.Item>
-                        <Accordion.Item eventKey="2">
-                            <Accordion.Header>Мои объявления</Accordion.Header>
-                            <Accordion.Body key={key}>
-                                {userHousing.map((item) => (
-                                    <Row key={item.id} className="mb-2">
-                                        <Col xs={2}>
-                                            {item.housing.name}
-                                        </Col>
-                                        <Col xs={2}>
-                                            {item.housing.price}
-                                        </Col>
-                                        <Col xs={2}>
-                                            {item.housing.description}
-                                        </Col>
-                                        <Col xs={2}>
-                                            <div style={{
-                                                width: "100px",
-                                                height: "100px",
-                                                backgroundImage: `url(${process.env.REACT_APP_API_URL + item.housing.img})`,
-                                                backgroundRepeat: 'no-repeat',
-                                                backgroundSize: 'cover'
-                                            }}>
-                                            </div>
-                                        </Col>
-                                        <Col xs={4}>
-                                            <Button className="me-2" variant="dark" onClick={() => {
-                                                updateHousing(item.housing.id)
-                                            }}>
-                                                Изменить
-                                            </Button>
-                                            <Button variant="danger" onClick={() => {
-                                                deleteHousing(item.housing.id)
-                                                    .then(() => {
-                                                        getUserHousing(user.id).then((data) => {
-                                                            setUserHousing(data);
-                                                            setKey((prevKey) => prevKey + 1);
-                                                        });
-                                                    })
-                                            }}>
-                                                Удалить
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                ))}
-                            </Accordion.Body>
-                        </Accordion.Item>
                     </Accordion>
+                    <Button className="mt-2" variant="dark" onClick={() => navigate(USER_HOUSING + '/' + user.id)}>
+                        Мои объявления
+                    </Button>
                     <ReviewModel show={updateModel} hide={() => setUpdateModel(false)} updId={updId} />
                     <UpdHousingModal show={updateHousingModel} hide={() => setUpdateHousingModel(false)} updId={updId} />
                 </Container>

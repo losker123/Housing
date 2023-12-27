@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { NavLink } from 'react-router-dom';
 import { ABOUT_ROUTE, ADMIN_ROUTE, LOGIN_ROUTE, USERPROFILE_ROUTE } from '../utils/consts';
 import { observer } from 'mobx-react-lite';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Context } from '..';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -29,15 +29,26 @@ const NavBar = observer(() => {
     return (
         <Navbar bg="dark" data-bs-theme="dark">
             <Container>
-                <NavLink
-                    style={{
-                        fontStyle: 'italic',
-                        fontSize: "19px", color: "wheat", textDecoration: "none"
-                    }}
-                    to={MAIN_ROUTE}
-                >
-                    Welcome
-                </NavLink>
+                <div>
+                    <NavLink
+                        style={{
+                            fontStyle: 'italic',
+                            fontSize: "19px", color: "wheat", textDecoration: "none"
+                        }}
+                        to={MAIN_ROUTE}
+                    >
+                        Welcome
+                    </NavLink>
+                    <NavLink
+                        className="ms-5 text-white-50"
+                        style={{
+                            fontSize: "19px", textDecoration: "none"
+                        }}
+                        to={ABOUT_ROUTE}
+                    >
+                        О нас
+                    </NavLink>
+                </div>
                 {localStorage.getItem('isAuth') ?
                     <Nav className="ml-auto">
                         {isAdmin ?
@@ -58,7 +69,7 @@ const NavBar = observer(() => {
                             onClick={() => navigate(USERPROFILE_ROUTE)}
                             variant='outlined-primary'
                         >
-                           Профиль 
+                            Профиль
                         </Button>
                         <Button
                             variant='outlined-primary'

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getOneHousing, getRenters, rentHousing } from "../http/housingApi";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import Spinner from 'react-bootstrap/Spinner';
 import { Map, Placemark, YMaps } from "@pbe/react-yandex-maps";
 import { LOGIN_ROUTE, MAIN_ROUTE } from "../utils/consts";
@@ -20,6 +20,7 @@ const HousingPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [renters, setRenters] = useState([]);
     const [reviewModel, setReviewModel] = useState(false)
+    const [errorAllert, setErrorAlert] = useState(false)
     const navigate = useNavigate()
 
     const onChangeDate = (dates) => {
@@ -38,6 +39,12 @@ const HousingPage = () => {
     }, [id]);
 
     const submitRent = async () => {
+
+        if (!id || !startDate || !endDate) {
+            setErrorAlert(true)
+            return;
+        }
+
         const formData = new FormData()
         formData.append('housingId', id)
         formData.append('userId', jwtDecode(localStorage.getItem('token')).id)
@@ -75,7 +82,6 @@ const HousingPage = () => {
                         <h6>Категория: {housing.category.name}</h6>
                         <h6>Цена за сутки: {housing.price}</h6>
                         <h6>Владелец: {housing.owner.user.email}</h6>
-                        <h6>Описание: {housing.description}</h6>
                         <div style={{
                             width: "300px",
                             height: "300px",
@@ -99,10 +105,20 @@ const HousingPage = () => {
                                         inline
                                     />
                                 </Form>
-                                <Button className="mt-2" variant="dark" onClick={() => submitRent()}>
-                            Забронировать
-
-                        </Button>
+                                {errorAllert ?
+                                    <Alert variant="danger" onClose={() => setErrorAlert(false)} dismissible>
+                                        <p>Даты не выбраны</p>
+                                    </Alert>
+                                    :
+                                    <></>
+                                }
+                                {housing.owner.user.id === jwtDecode(localStorage.getItem('token')).id ?
+                                    <p>Вы владелец объявления</p>
+                                    :
+                                    <Button className="mt-2 mb-2" variant="dark" onClick={() => submitRent()}>
+                                        Забронировать
+                                    </Button>
+                                }
                             </>
                             :
                             <>
@@ -111,7 +127,6 @@ const HousingPage = () => {
                                 </Button>
                             </>
                         }
-                        
                     </Col>
                     <Col xs={5} className="ms-2">
                         <YMaps>
