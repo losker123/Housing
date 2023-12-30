@@ -81,7 +81,7 @@ const ReviewModel = ({ show = false, hide, id, updId }) => {
                                     initialRating={reviewData ? reviewData.rating : rating}
                                     onChange={handleRatingChange}
                                     emptySymbol={<FaRegHeart />}
-                                    fullSymbol={<FaHeart />}
+                                    fullSymbol={<FaHeart style={{ color: 'red' }} />}
                                 />
                                 </div>
                             </>

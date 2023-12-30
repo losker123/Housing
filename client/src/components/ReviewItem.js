@@ -23,7 +23,7 @@ const ReviewItem = ({ id }) => {
                             initialRating={item.rating}
                             readonly
                             emptySymbol={<FaRegHeart />}
-                            fullSymbol={<FaHeart />}
+                            fullSymbol={<FaHeart style={{ color: 'red' }} />}
                         />
                         <h6 style={{ marginLeft: '10px' }}>{item.comment}</h6>
                     </div>

@@ -103,7 +103,7 @@ const UserProfile = () => {
                                                 initialRating={item.rating}
                                                 readonly
                                                 emptySymbol={<FaRegHeart />}
-                                                fullSymbol={<FaHeart />}
+                                                fullSymbol={<FaHeart style={{ color: 'red' }} />}
                                             />
                                         </Col>
                                         <Col xs={6}>
